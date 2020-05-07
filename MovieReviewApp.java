@@ -169,7 +169,7 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
 		movieReviewFrame.setVisible(false);
 
 
-/***************** movieReviewFrame code ******************/
+/***************** loadReviewFrame code ******************/
 
 		loadReviewFrame = new JFrame("Load Reviews");
 		reviewPathLable = new JLabel("Reviews Path:");
