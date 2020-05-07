@@ -20,16 +20,23 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
 
 	 	public JFrame posNegFrame;
 	 	public JFrame movieReviewFrame;
+	 	public JFrame loadReviewFrame;
 
 		public JLabel pos;
 		public JLabel neg;
 		public JLabel pathResult;  // displays if paths exist
 		public JLabel welcomeMessage;
+		public JLabel reviewPathLable;
+		public JLabel reviewScoreLable;
+		public JLabel loadResult;
 
 		public JTextField posPath;
 		public JTextField negPath;
+		public JTextField reviewPath;
+		public JTextField actualScore;
 
-		public JButton testPaths, loadReviews, deleteReviews, searchById, searchBySubstring;
+		public JButton testPaths, loadReviews, deleteReviews, searchById, searchBySubstring,
+					loadReviewsButton;
 
 		MovieReviewApp() {
 
@@ -157,24 +164,75 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
 		layoutConst.insets = new Insets(10, 10,10,10);
 		movieReviewFrame.add(searchBySubstring, layoutConst);
 
-
-
 		movieReviewFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		movieReviewFrame.pack();
 		movieReviewFrame.setVisible(false);
 
 
+/***************** movieReviewFrame code ******************/
+
+		loadReviewFrame = new JFrame("Load Reviews");
+		reviewPathLable = new JLabel("Reviews Path:");
+		reviewScoreLable = new JLabel("Real score:");
+		loadResult = new JLabel("");
+		reviewPath = new JTextField(20);
+		actualScore = new JTextField(20);
+		loadReviewsButton = new JButton("Load");
+		loadReviewsButton.addActionListener(this);
+
+		loadReviewFrame.setLayout(new GridBagLayout());
+		layoutConst = new GridBagConstraints();
+
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 0;
+		layoutConst.insets = new Insets(10,10,10,10);
+		loadReviewFrame.add(reviewPathLable, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 1;
+		layoutConst.insets = new Insets(10,10,10,10);
+		loadReviewFrame.add(reviewScoreLable, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 0;
+		layoutConst.insets = new Insets(10,10,10,10);
+		loadReviewFrame.add(reviewPath, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 1;
+		layoutConst.insets = new Insets(10,10,10,10);
+		loadReviewFrame.add(actualScore, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 2;
+		layoutConst.insets = new Insets(10,10,10,10);
+		loadReviewFrame.add(loadReviewsButton, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 2;
+		layoutConst.insets = new Insets(10,10,10,10);
+		loadReviewFrame.add(loadResult, layoutConst);
+
+		loadReviewFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		loadReviewFrame.pack();
+		loadReviewFrame.setVisible(false);
+
 		}
 
  	public void actionPerformed (ActionEvent event) {
- 		ReviewHandler hr = new ReviewHandler();
-
- 		File posFilePath = new File(posPath.getText());
- 		File negFilePath = new File(negPath.getText());
+ 		ReviewHandler rh = new ReviewHandler();
 
  		if (event.getSource() == testPaths) {
  			try {
- 				hr.loadPosNegWords(posPath.getText(), negPath.getText());
+ 				File posFilePath = new File(posPath.getText());
+ 				File negFilePath = new File(negPath.getText());
+
+ 				rh.loadPosNegWords(posPath.getText(), negPath.getText());
  				pathResult.setText("Paths accepted");
  				movieReviewFrame.setVisible(true);
  				posNegFrame.dispose();
@@ -182,6 +240,28 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
  				pathResult.setText("Invalid path name(s), re-enter");
  			}
  		}
+
+ 		// Furthur implementation of loadReviews
+ 		if (event.getSource() == loadReviews) {
+ 			loadReviewFrame.setVisible(true);
+ 		}
+
+ 		if (event.getSource() == loadReviewsButton) {
+
+
+ 			if (actualScore.getText().equals("1") || actualScore.getText().equals("2") ||
+ 				actualScore.getText().equals("0")) {
+ 				if (Files.exists(Path.of(reviewPath.getText()))) {
+ 					rh.loadReviews(reviewPath.getText(), Integer.parseInt(actualScore.getText()));
+ 					loadResult.setText("Succuessful Load!"); // change to close Frame
+ 				}
+ 				else
+ 					loadResult.setText("Error, path doesn't exists.");
+ 			}
+ 			else
+ 				loadResult.setText("Error, needs to be 0, 1, or 2");
+ 		}
+
 
  	}
 
