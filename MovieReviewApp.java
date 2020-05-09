@@ -17,10 +17,14 @@ import java.awt.Insets;
 
 public class MovieReviewApp implements ActionListener {   // does not implement yet
 
+		public ReviewHandler rh = new ReviewHandler();
 
 	 	public JFrame posNegFrame;
 	 	public JFrame movieReviewFrame;
 	 	public JFrame loadReviewFrame;
+	 	public JFrame deleteReviewFrame;
+	 	public JFrame searchByIdFrame;
+	 	public JFrame searchBySubstringFrame;
 
 		public JLabel pos;
 		public JLabel neg;
@@ -29,14 +33,29 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
 		public JLabel reviewPathLable;
 		public JLabel reviewScoreLable;
 		public JLabel loadResult;
+		public JLabel deletePrompt;
+		public JLabel deleteResult;
+		public JLabel idSearchPrompt;
+		public JLabel idSearchMessage;
+		public JLabel stringSearchPrompt;
+		public JLabel stringSearchMessage;
+
+		public JTextArea idOutputArea;
+		public JTextArea strOutputArea;
+
+		public JScrollPane idPane;
+		public JScrollPane substringPane;
 
 		public JTextField posPath;
 		public JTextField negPath;
 		public JTextField reviewPath;
 		public JTextField actualScore;
+		public JTextField reviewToDelete;
+		public JTextField idToSearch;
+		public JTextField substringSearch;
 
 		public JButton testPaths, loadReviews, deleteReviews, searchById, searchBySubstring,
-					loadReviewsButton;
+					loadReviewsButton, deleteButton, idSearchButton, substringSearchButton;
 
 		MovieReviewApp() {
 
@@ -113,12 +132,12 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
       	posNegFrame.add(testPaths, layoutConst);
 
 
-
 		posNegFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		posNegFrame.pack();
 		posNegFrame.setVisible(true);
 
 /***************** movieReviewFrame code ******************/
+// Need to implement JTable
 
 		movieReviewFrame = new JFrame("Movie Reviews");
 		welcomeMessage = new JLabel("Choose one of the following options:");
@@ -222,10 +241,155 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
 		loadReviewFrame.pack();
 		loadReviewFrame.setVisible(false);
 
+/***************** deleteReviewFrame code ******************/
+
+		deleteReviewFrame = new JFrame("Delete Review");
+		deletePrompt = new JLabel("Review ID:");
+		deleteResult = new JLabel("");
+		reviewToDelete = new JTextField(15);
+		deleteButton = new JButton("Delete");
+		deleteButton.addActionListener(this);
+
+		deleteReviewFrame.setLayout(new GridBagLayout());
+		layoutConst = new GridBagConstraints();
+
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 0;
+		layoutConst.insets = new Insets(10,10,10,10);
+		deleteReviewFrame.add(deletePrompt, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 0;
+		layoutConst.insets = new Insets(10,10,10,10);
+		deleteReviewFrame.add(reviewToDelete, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 1;
+		layoutConst.insets = new Insets(10,10,10,10);
+		deleteReviewFrame.add(deleteButton, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 1;
+		layoutConst.insets = new Insets(10,10,10,10);
+		deleteReviewFrame.add(deleteResult, layoutConst);
+
+		deleteReviewFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		deleteReviewFrame.pack();
+		deleteReviewFrame.setVisible(false);
+
+
+/***************** searchByIdFrame code ******************/
+
+		searchByIdFrame = new JFrame("Search By ID");
+		idSearchPrompt = new JLabel("Enter ID:");
+		idSearchMessage = new JLabel("");
+		idToSearch = new JTextField(15);
+		idSearchButton = new JButton("Search");
+		idSearchButton.addActionListener(this);
+
+		// JText area and scroll for text area
+		idOutputArea = new JTextArea(10,15);
+		idPane = new JScrollPane(idOutputArea);
+		idOutputArea.setEditable(false);
+
+		searchByIdFrame.setLayout(new GridBagLayout());
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 0;
+		layoutConst.insets = new Insets(10,10,10,10);
+		searchByIdFrame.add(idSearchPrompt, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 0;
+		layoutConst.insets = new Insets(10,10,10,10);
+		searchByIdFrame.add(idToSearch, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 1;
+		layoutConst.insets = new Insets(10,10,10,10);
+		searchByIdFrame.add(idSearchButton, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 1;
+		layoutConst.insets = new Insets(10,10,10,10);
+		searchByIdFrame.add(idSearchMessage, layoutConst);
+
+		// Setup for Output Area
+		layoutConst = new GridBagConstraints();
+		layoutConst.fill = GridBagConstraints.HORIZONTAL;
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 2;
+		layoutConst.insets = new Insets(10,10,10,10);
+		layoutConst.gridwidth = 2;
+		searchByIdFrame.add(idPane, layoutConst);
+
+		searchByIdFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		searchByIdFrame.pack();
+		searchByIdFrame.setVisible(false);
+
+/***************** searchBySubstringFrame code ******************/
+
+		searchBySubstringFrame = new JFrame("Search By Substring");
+		stringSearchPrompt = new JLabel("Enter  Substring:");
+		stringSearchMessage = new JLabel("");
+		substringSearch = new JTextField(20);
+		substringSearchButton = new JButton("Search");
+		substringSearchButton.addActionListener(this);
+
+		strOutputArea = new JTextArea(10,15);
+		substringPane = new JScrollPane(strOutputArea);
+		strOutputArea.setVisible(false);
+
+		searchBySubstringFrame.setLayout(new GridBagLayout());
+		layoutConst = new GridBagConstraints();
+
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 0;
+		layoutConst.insets = new Insets(10,10,10,10);
+		searchBySubstringFrame.add(stringSearchPrompt, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 0;
+		layoutConst.insets = new Insets(10,10,10,10);
+		searchBySubstringFrame.add(substringSearch, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 1;
+		layoutConst.insets = new Insets(10,10,10,10);
+		searchBySubstringFrame.add(substringSearchButton, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 1;
+		layoutConst.insets = new Insets(10,10,10,10);
+		searchBySubstringFrame.add(stringSearchMessage, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 2;
+		layoutConst.insets = new Insets(10,10,10,10);
+		layoutConst.fill = GridBagConstraints.HORIZONTAL;
+		layoutConst.gridwidth = 4;
+		searchBySubstringFrame.add(substringPane, layoutConst);
+
+		searchBySubstringFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		searchBySubstringFrame.pack();
+		searchBySubstringFrame.setVisible(false);
+
+
 		}
 
  	public void actionPerformed (ActionEvent event) {
- 		ReviewHandler rh = new ReviewHandler();
+ 		// ReviewHandler rh = new ReviewHandler();
 
  		if (event.getSource() == testPaths) {
  			try {
@@ -244,6 +408,18 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
  		// Furthur implementation of loadReviews
  		if (event.getSource() == loadReviews) {
  			loadReviewFrame.setVisible(true);
+ 		}
+
+ 		if (event.getSource() == deleteReviews) {
+ 			deleteReviewFrame.setVisible(true);
+ 		}
+
+ 		if (event.getSource() == searchById) {
+ 			searchByIdFrame.setVisible(true);
+ 		}
+
+ 		if (event.getSource() == searchBySubstring) {
+ 			searchBySubstringFrame.setVisible(true);
  		}
 
  		if (event.getSource() == loadReviewsButton) {
@@ -267,6 +443,9 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
 
 
 		public static void main (String [] args) {
+
+
 			new MovieReviewApp();
 		}
 }
+
