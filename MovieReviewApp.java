@@ -438,12 +438,81 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
  				loadResult.setText("Error, needs to be 0, 1, or 2");
  		}
 
+ 		if (event.getSource() == deleteButton) {
+ 			String idStr = reviewToDelete.getText();
+
+
+ 			if (!idStr.matches("-?(0|[1-9]\\d*)")) {
+ 				deleteResult.setText("Invalid Input");
+ 			} 
+ 			else if (!rh.getDatabase().containsKey(Integer.parseInt(idStr))) {
+ 				deleteResult.setText("Id " + idStr + " does not exist");
+ 			}
+ 			else {
+ 			 	int id = Integer.parseInt(idStr);
+ 				rh.deleteReview(id);
+ 				deleteResult.setText("Review " + id + " deleted!");
+ 			}
+
+ 		}
+
+ 		if (event.getSource() == idSearchButton) {
+ 			String idStr = idToSearch.getText();
+
+ 			if (!idStr.matches("-?(0|[1-9]\\d*)")) {
+ 				idSearchMessage.setText("Invalid input");
+ 			}
+ 			else if (!rh.getDatabase().containsKey(Integer.parseInt(idStr))) {
+ 				idSearchMessage.setText("Id " + idStr + " does not exist");
+ 			}
+ 			else {
+ 				int id = Integer.parseInt(idStr);
+ 				MovieReview mr = rh.searchById(id);
+
+ 				idOutputArea.setText("");
+
+ 				idOutputArea.append("Review Id: " + mr.getId() + "\n" +
+ 									"Real Score: " + mr.getRealScore() + "\n" +
+ 									"Predicted Score: " + mr.getPredictedScore() + "\n" +
+ 									"Text: " + mr.getText().substring(0,35) + "...");
+ 			}
+ 		}
+
+ 		if (event.getSource() == substringSearchButton) {
+
+ 			String substring = substringSearch.getText();
+
+ 			List<MovieReview> reivewList = rh.searchBySubstring(substring);
+
+ 			if (reivewList != null) {
+
+
+ 				strOutputArea.setText("");
+				
+ 				for ( MovieReview mr: reivewList ) {
+
+ 					strOutputArea.append(
+ 						"Review Id: " + mr.getId() + "\n" +
+ 						"Real Score: " + mr.getRealScore() + "\n" +
+ 						"Predicted Score: " + mr.getPredictedScore() + "\n" +
+ 						"Text: " + mr.getText().substring(0,40) + "..." + "\n\n");
+ 				}
+
+ 			} else {
+ 				stringSearchMessage.setText("Substring can't be found.");
+ 			}
+
+ 		}
+
 
  	}
 
 
 		public static void main (String [] args) {
 
+			// ./material/data/positive-words.txt
+			// ./material/data/negavite-words.txt
+			// ./material/data/Movie-review/pos 
 
 			new MovieReviewApp();
 		}

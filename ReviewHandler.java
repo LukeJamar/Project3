@@ -187,7 +187,7 @@ public class ReviewHandler extends AbstractReviewHandler {
             System.out.println("ID " + id + " does not exist.");
         } else {
             getDatabase().remove(id);
-            System.out.println("Review with ID " + id + " deleted.");
+            // System.out.println("Review with ID " + id + " deleted.");
         }
     }
     
