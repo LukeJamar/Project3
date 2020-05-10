@@ -89,8 +89,9 @@ public abstract class AbstractReviewHandler {
         if(dictionary.size() == 0){
             throw new IOException("File " + fileName + " is empty");
         }
-        System.out.println("Hash set is of size " + dictionary.size());
-    }
+        // System.out.println("Hash set is of size " + dictionary.size());
+        // Is removed for GUI output
+    }   
     
 
     /**

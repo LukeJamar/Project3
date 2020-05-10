@@ -59,7 +59,7 @@ public class ReviewHandler extends AbstractReviewHandler {
                 }
             } else {
                 // Folder
-                System.out.println("Loading reviews...");
+                // System.out.println("Loading reviews..."); // removed for GUI
                 String[] files = fileOrFolder.list();
                 String fileSeparatorChar = System.getProperty("file.separator");
                 int counter = 0;
@@ -84,15 +84,17 @@ public class ReviewHandler extends AbstractReviewHandler {
                     }
                 }
                 // Output result: folder
-                System.out.println("Folder imported.");
-                System.out.println("Number of entries: " + files.length);
+                // System.out.println("Folder imported.");
+                // System.out.println("Number of entries: " + files.length);
 
                 // Only output accuracy if real class is known
+                /*
                 if (realClass != 2) {
                     System.out.println("Correctly classified: " + counter);
                     System.out.println("Misclassified: " + (files.length - counter));
                     System.out.println("Accuracy: " + ((double)counter / (double)files.length * 100) + "%");
                 }
+                */
             }
         } catch (IOException e) {
             System.err.println(e.toString());
@@ -215,7 +217,7 @@ public class ReviewHandler extends AbstractReviewHandler {
      */
     @Override
     public void loadDB() throws IOException {
-        System.out.print("Reading getDatabase()...");
+        // System.out.print("Reading getDatabase()...");
         
         File dataFile = new File(DATA_FILE_NAME);
         if (!dataFile.exists()) {
@@ -245,7 +247,7 @@ public class ReviewHandler extends AbstractReviewHandler {
             setReviewIdCounter(Collections.max(getDatabase().keySet()).intValue() + 1);
         
         close(inFile);
-        System.out.println("Done.");
+        // System.out.println("Done.");
     }
 
     /**

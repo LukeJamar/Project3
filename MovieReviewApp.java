@@ -15,48 +15,40 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-public class MovieReviewApp implements ActionListener {   // does not implement yet
+
+/**
+* Class for Movie Review Datablase Implemeted through Swing GUI
+* @author Frederick Jamar
+*/
+public class MovieReviewApp implements ActionListener { 
 
 		public ReviewHandler rh = new ReviewHandler();
 
-	 	public JFrame posNegFrame;
-	 	public JFrame movieReviewFrame;
-	 	public JFrame loadReviewFrame;
-	 	public JFrame deleteReviewFrame;
-	 	public JFrame searchByIdFrame;
-	 	public JFrame searchBySubstringFrame;
+	 	public JFrame posNegFrame, movieReviewFrame, loadReviewFrame, deleteReviewFrame,
+	 					searchByIdFrame, searchBySubstringFrame;
 
-		public JLabel pos;
-		public JLabel neg;
-		public JLabel pathResult;  // displays if paths exist
-		public JLabel welcomeMessage;
-		public JLabel reviewPathLable;
-		public JLabel reviewScoreLable;
-		public JLabel loadResult;
-		public JLabel deletePrompt;
-		public JLabel deleteResult;
-		public JLabel idSearchPrompt;
-		public JLabel idSearchMessage;
-		public JLabel stringSearchPrompt;
-		public JLabel stringSearchMessage;
+		public JLabel pos, neg, pathResult, welcomeMessage, menuMessage, reviewPathLable, reviewScoreLable,
+						loadResult, accuracyLable, deletePrompt, deleteResult, idSearchPrompt, idSearchMessage,
+						stringSearchPrompt, stringSearchMessage, totalLable, loadDBMessage;
 
-		public JTextArea idOutputArea;
-		public JTextArea strOutputArea;
+		public JTextArea idOutputArea, strOutputArea;
 
-		public JScrollPane idPane;
-		public JScrollPane substringPane;
+		public JScrollPane idPane, substringPane, mainPane;
 
-		public JTextField posPath;
-		public JTextField negPath;
-		public JTextField reviewPath;
-		public JTextField actualScore;
-		public JTextField reviewToDelete;
-		public JTextField idToSearch;
-		public JTextField substringSearch;
+		public JTable mainTable;
+
+		public JTextField posPath, negPath, reviewPath, actualScore, reviewToDelete,
+							idToSearch, substringSearch;
 
 		public JButton testPaths, loadReviews, deleteReviews, searchById, searchBySubstring,
-					loadReviewsButton, deleteButton, idSearchButton, substringSearchButton;
+					loadReviewsButton, deleteButton, idSearchButton, substringSearchButton,
+					loadDB, saveDB, exitPosNeg, exitMain, exitload, exitDelete, exitSearchId,
+					exitSearchSub;
 
+
+		/**
+		* Constructor for MovieReviewApp, where all frames are initialized
+		*/
 		MovieReviewApp() {
 
 /***************** posNegFrame  code ******************/
@@ -137,51 +129,132 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
 		posNegFrame.setVisible(true);
 
 /***************** movieReviewFrame code ******************/
-// Need to implement JTable
 
 		movieReviewFrame = new JFrame("Movie Reviews");
-		welcomeMessage = new JLabel("Choose one of the following options:");
-		loadReviews = new JButton("Load new movie review collection (given a folder or a file path)");
-		deleteReviews = new JButton("Delete movie review from database (given its ID)");
-		searchById = new JButton("Search movie reviews in database by ID");
-		searchBySubstring = new JButton("Search movie reviews by matching a substring");
+		welcomeMessage = new JLabel("Movie Review Database panel:");
+		menuMessage = new JLabel("Choose one of the following: (Exit will save database)");
+		accuracyLable = new JLabel("Accuracy: ");
+		totalLable = new JLabel("total: ");
+		loadDBMessage = new JLabel("");
+		loadReviews = new JButton("Load reviews");
+		deleteReviews = new JButton("Delete Review (given ID)");
+		searchById = new JButton("Search reviews by ID");
+		searchBySubstring = new JButton("Search reviews by substring");
+		loadDB = new JButton("LoadDB");
+		saveDB = new JButton("SaveDB");
+		exitMain = new JButton("Exit");
 
 		movieReviewFrame.setLayout(new GridBagLayout());
 		layoutConst = new GridBagConstraints();
+
+		Object [][] tableVals = new Object[2001][4];
+		String []columnHeadings = { "ID", "Real Score", "Predicted Score", "Filepath"};
+		mainTable = new JTable(tableVals, columnHeadings);
+		mainTable.setEnabled(false);
+
+		mainPane = new JScrollPane(mainTable);
 
 		loadReviews.addActionListener(this);
 		deleteReviews.addActionListener(this);
 		searchById.addActionListener(this);
 		searchBySubstring.addActionListener(this);
+		loadDB.addActionListener(this);
+		saveDB.addActionListener(this);
+		exitMain.addActionListener(this);
+
 
 		layoutConst.gridx = 0;
 		layoutConst.gridy = 0;
-		layoutConst.insets = new Insets(10, 10,10,10);
+		layoutConst.insets = new Insets(10,10,10,10);
+		layoutConst.fill = GridBagConstraints.HORIZONTAL;
 		movieReviewFrame.add(welcomeMessage, layoutConst);
 
 		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(1, 10,10,10);
+		layoutConst.fill = GridBagConstraints.HORIZONTAL;
 		layoutConst.gridx = 0;
 		layoutConst.gridy = 1;
-		layoutConst.insets = new Insets(10, 10,10,10);
-		movieReviewFrame.add(loadReviews, layoutConst);
+		layoutConst.gridwidth = 4;
+		movieReviewFrame.add(mainTable.getTableHeader(), layoutConst);
 
+		
 		layoutConst = new GridBagConstraints();
 		layoutConst.gridx = 0;
 		layoutConst.gridy = 2;
 		layoutConst.insets = new Insets(10, 10,10,10);
-		movieReviewFrame.add(deleteReviews, layoutConst);
+		layoutConst.fill = GridBagConstraints.HORIZONTAL;
+		layoutConst.gridwidth = 4;
+		movieReviewFrame.add(mainPane, layoutConst);
+		
 
 		layoutConst = new GridBagConstraints();
 		layoutConst.gridx = 0;
 		layoutConst.gridy = 3;
+		layoutConst.gridwidth = 2;
 		layoutConst.insets = new Insets(10, 10,10,10);
-		movieReviewFrame.add(searchById, layoutConst);
+		movieReviewFrame.add(menuMessage, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 2;
+		layoutConst.gridy = 3;
+		layoutConst.insets = new Insets(10, 10,10,10);
+		movieReviewFrame.add(accuracyLable, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 3;
+		layoutConst.gridy = 3;
+		layoutConst.insets = new Insets(10, 10,10,10);
+		movieReviewFrame.add(totalLable, layoutConst);
 
 		layoutConst = new GridBagConstraints();
 		layoutConst.gridx = 0;
 		layoutConst.gridy = 4;
 		layoutConst.insets = new Insets(10, 10,10,10);
+		movieReviewFrame.add(loadReviews, layoutConst);		
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 4;
+		layoutConst.insets = new Insets(10, 10,10,10);
+		movieReviewFrame.add(deleteReviews, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 2;
+		layoutConst.gridy = 4;
+		layoutConst.insets = new Insets(10, 10,10,10);
+		movieReviewFrame.add(searchById, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 3;
+		layoutConst.gridy = 4;
+		layoutConst.insets = new Insets(10, 10,10,10);
 		movieReviewFrame.add(searchBySubstring, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 4;
+		layoutConst.gridy = 3;
+		layoutConst.insets = new Insets(10, 10,10,10);
+		movieReviewFrame.add(loadDB, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 4;
+		layoutConst.gridy = 4;
+		layoutConst.insets = new Insets(10, 10,10,10);	
+		movieReviewFrame.add(saveDB, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 5;
+		layoutConst.gridy = 4;
+		layoutConst.insets = new Insets(10, 10,10,10);	
+		movieReviewFrame.add(exitMain, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 4;
+		layoutConst.gridy = 0;
+		layoutConst.gridwidth = 2;
+		layoutConst.insets = new Insets(10, 10,10,10);
+		movieReviewFrame.add(loadDBMessage, layoutConst);	
+
 
 		movieReviewFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		movieReviewFrame.pack();
@@ -388,8 +461,11 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
 
 		}
 
+	/**
+	* listener function for all buttons & feilds in the interface
+	* @param event onject initated from actionListener
+	*/
  	public void actionPerformed (ActionEvent event) {
- 		// ReviewHandler rh = new ReviewHandler();
 
  		if (event.getSource() == testPaths) {
  			try {
@@ -405,7 +481,6 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
  			}
  		}
 
- 		// Furthur implementation of loadReviews
  		if (event.getSource() == loadReviews) {
  			loadReviewFrame.setVisible(true);
  		}
@@ -430,6 +505,8 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
  				if (Files.exists(Path.of(reviewPath.getText()))) {
  					rh.loadReviews(reviewPath.getText(), Integer.parseInt(actualScore.getText()));
  					loadResult.setText("Succuessful Load!"); // change to close Frame
+ 					updateTable();
+ 					accuracyTest();
  				}
  				else
  					loadResult.setText("Error, path doesn't exists.");
@@ -451,6 +528,8 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
  			else {
  			 	int id = Integer.parseInt(idStr);
  				rh.deleteReview(id);
+ 				updateTable();
+ 				totalLable.setText("Total: " + rh.getDatabase().size());
  				deleteResult.setText("Review " + id + " deleted!");
  			}
 
@@ -464,6 +543,7 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
  			}
  			else if (!rh.getDatabase().containsKey(Integer.parseInt(idStr))) {
  				idSearchMessage.setText("Id " + idStr + " does not exist");
+ 				idOutputArea.setText("");
  			}
  			else {
  				int id = Integer.parseInt(idStr);
@@ -481,7 +561,7 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
  		if (event.getSource() == substringSearchButton) {
 
  			String substring = substringSearch.getText();
-
+ 			System.out.println(substring);
  			List<MovieReview> reivewList = rh.searchBySubstring(substring);
 
  			if (reivewList != null) {
@@ -498,21 +578,95 @@ public class MovieReviewApp implements ActionListener {   // does not implement 
  						"Text: " + mr.getText().substring(0,40) + "..." + "\n\n");
  				}
 
- 			} else {
+ 			}
+ 			else {
  				stringSearchMessage.setText("Substring can't be found.");
+ 				strOutputArea.setText("");
  			}
 
+ 		}
+
+ 		if (event.getSource() == loadDB) {
+        	File dataFile = new File("database.txt");
+
+        	if (!dataFile.exists()){
+        		loadDBMessage.setText("No database file found.");
+        	}
+        	else {
+        		try{
+        			rh.loadDB();
+        			updateTable();
+        			accuracyTest();
+        	} catch(IOException ex) {
+        		loadDBMessage.setText("database file could not load.");
+        	}
+        	}
+ 		}
+
+ 		if (event.getSource() == saveDB) {
+ 			try {
+ 				rh.saveDB();
+ 				loadDBMessage.setText("Database saved!");
+ 			}catch (IOException ex) {
+ 				loadDBMessage.setText("database could not be saved. (IO)");
+ 		}
+
+ 		}
+
+ 		if (event.getSource() == exitMain) {
+ 			try{
+ 				rh.saveDB();
+ 				System.exit(0);
+ 			} catch (IOException ex) {
+ 				loadDBMessage.setText("database could not be saved. (IO)");
+ 			}
  		}
 
 
  	}
 
+ 	/**
+ 	* updates the main table in the Movie Review window
+ 	*/
+ 	public void updateTable() {
+ 		final int idCol = 0;
+ 		final int realScoreCol = 1;
+ 		final int predictedCol = 2;
+ 		final int pathCol = 3;
+ 		int i = 0; // index for loop
+
+		// Replaces alll spaces and sets updated list 		
+ 		for (MovieReview mr : rh.getDatabase().values()) {
+ 			mainTable.setValueAt(mr.getId(), i, idCol);
+ 			mainTable.setValueAt(mr.getRealScore(), i, realScoreCol);
+ 			mainTable.setValueAt(mr.getPredictedScore(), i, predictedCol);
+ 			mainTable.setValueAt(mr.getFilePath(), i, pathCol);
+ 			i++;
+		} 
+ 	}
+
+ 	/**
+ 	* accuracy test to replace that in console output
+ 	*/
+ 	public void accuracyTest() {
+ 		 int counter = 0;
+ 		 double percent;
+
+ 		for (MovieReview mr : rh.getDatabase().values()) {
+ 			if (mr.getRealScore() != mr.getPredictedScore())
+ 				if (mr.getPredictedScore() != ReviewScore.UNKNOWN)
+ 					counter++;
+ 		}
+
+ 		percent = (counter * 100.0) / rh.getDatabase().size();
+ 		percent = 100 - percent;
+ 		accuracyLable.setText("Accuracy: " + percent);
+ 		totalLable.setText("Total: " + rh.getDatabase().size());
+
+ 	}
+
 
 		public static void main (String [] args) {
-
-			// ./material/data/positive-words.txt
-			// ./material/data/negavite-words.txt
-			// ./material/data/Movie-review/pos 
 
 			new MovieReviewApp();
 		}
