@@ -80,7 +80,9 @@ public class MovieReviewApp implements ActionListener {
 
 		// initialize compare button
 		testPaths = new JButton("Check Paths");
+		exitPosNeg = new JButton("Exit");
 		testPaths.addActionListener(this);
+		exitPosNeg.addActionListener(this);
 
 		// Uses Gridbag Layout for GUI
 		posNegFrame.setLayout(new GridBagLayout());
@@ -122,6 +124,12 @@ public class MovieReviewApp implements ActionListener {
       	layoutConst.gridy = 2;
       	layoutConst.insets = new Insets(10,10,10,10);
       	posNegFrame.add(testPaths, layoutConst);
+
+      	layoutConst = new GridBagConstraints();
+      	layoutConst.gridx = 2;
+      	layoutConst.gridy = 2;
+      	layoutConst.insets = new Insets(10,10,10,10);
+      	posNegFrame.add(exitPosNeg,layoutConst);
 
 
 		posNegFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -270,7 +278,9 @@ public class MovieReviewApp implements ActionListener {
 		reviewPath = new JTextField(20);
 		actualScore = new JTextField(20);
 		loadReviewsButton = new JButton("Load");
+		exitload = new JButton("Exit");
 		loadReviewsButton.addActionListener(this);
+		exitload.addActionListener(this);
 
 		loadReviewFrame.setLayout(new GridBagLayout());
 		layoutConst = new GridBagConstraints();
@@ -310,6 +320,12 @@ public class MovieReviewApp implements ActionListener {
 		layoutConst.insets = new Insets(10,10,10,10);
 		loadReviewFrame.add(loadResult, layoutConst);
 
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 2;
+		layoutConst.gridy = 2;
+		layoutConst.insets = new Insets(10,10,10,10);
+		loadReviewFrame.add(exitload, layoutConst);
+
 		loadReviewFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		loadReviewFrame.pack();
 		loadReviewFrame.setVisible(false);
@@ -321,7 +337,9 @@ public class MovieReviewApp implements ActionListener {
 		deleteResult = new JLabel("");
 		reviewToDelete = new JTextField(15);
 		deleteButton = new JButton("Delete");
+		exitDelete = new JButton("Exit");
 		deleteButton.addActionListener(this);
+		exitDelete.addActionListener(this);
 
 		deleteReviewFrame.setLayout(new GridBagLayout());
 		layoutConst = new GridBagConstraints();
@@ -348,6 +366,12 @@ public class MovieReviewApp implements ActionListener {
 		layoutConst.gridy = 1;
 		layoutConst.insets = new Insets(10,10,10,10);
 		deleteReviewFrame.add(deleteResult, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.gridx = 2;
+		layoutConst.gridy = 1;
+		layoutConst.insets = new Insets(10,10,10,10);
+		deleteReviewFrame.add(exitDelete, layoutConst);
 
 		deleteReviewFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		deleteReviewFrame.pack();
@@ -561,7 +585,6 @@ public class MovieReviewApp implements ActionListener {
  		if (event.getSource() == substringSearchButton) {
 
  			String substring = substringSearch.getText();
- 			System.out.println(substring);
  			List<MovieReview> reivewList = rh.searchBySubstring(substring);
 
  			if (reivewList != null) {
@@ -592,6 +615,9 @@ public class MovieReviewApp implements ActionListener {
         	if (!dataFile.exists()){
         		loadDBMessage.setText("No database file found.");
         	}
+        	else if (rh.getDatabase().size() != 0) {
+        		loadDBMessage.setText("Database contains reviews");
+        	}
         	else {
         		try{
         			rh.loadDB();
@@ -620,6 +646,18 @@ public class MovieReviewApp implements ActionListener {
  			} catch (IOException ex) {
  				loadDBMessage.setText("database could not be saved. (IO)");
  			}
+ 		}
+
+ 		if (event.getSource() == exitPosNeg) {
+ 			System.exit(0);
+ 		}
+
+ 		if (event.getSource() == exitload) {
+ 			loadReviewFrame.dispose();
+ 		}
+
+ 		if (event.getSource() == exitDelete) {
+ 			deleteReviewFrame.dispose();
  		}
 
 
@@ -664,11 +702,5 @@ public class MovieReviewApp implements ActionListener {
  		totalLable.setText("Total: " + rh.getDatabase().size());
 
  	}
-
-
-		public static void main (String [] args) {
-
-			new MovieReviewApp();
-		}
 }
 

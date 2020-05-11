@@ -285,6 +285,10 @@ public class ReviewHandler extends AbstractReviewHandler {
             // No review has given substring
             return null;
         }
-
     }
+
+            public static void main (String [] args) {
+
+            new MovieReviewApp();
+        }
 }
